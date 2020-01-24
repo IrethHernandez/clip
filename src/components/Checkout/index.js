@@ -117,7 +117,6 @@ const Card = styled.div`
        top: -100px;
     }
 `
-
 const H2 = styled.h2`
     color: white;
     font-size: 28px;
@@ -129,7 +128,6 @@ const Hologram = styled.div`
     background: lightblue;
     border-radius: 5px;
 `
-
 const RowCard = styled.div`
     width: 100%;
     display: flex;
@@ -154,7 +152,6 @@ const ColOneThirdCard = styled(ColOneThird)`
         width: 33.33333% !important;
     }
 `
-
 const ColTwoThirdCard = styled(ColTwoThird)`
     @media screen and (max-width: 768px){
         width: 66.66666% !important;
