@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import InputMask from 'react-input-mask'
 import creditCardType, { getTypeInfo, types as CardType } from 'credit-card-type';
@@ -179,6 +179,7 @@ const Checkout = () =>{
     let optionsMonth = [];
     let optionsYear = [];
     let  month = 1, yearStart = 2020,  monthsArr = [],  yearsArr = [];
+    const [ responsePost, setResponsePost ] = useState('');
     const [ code, setCode ] = useState({
         name: 'CCV',
         size: 3
@@ -228,7 +229,6 @@ const Checkout = () =>{
     /**** Valida los datos y avisa al usuario si hay errores. Si todo está bien, envía el formulario ****/
     const submit = (e) => {
         e.preventDefault();
-        console.log(validations)
         /**** Número de tarjeta ****/
         if(cardData.cardNumber.length === 0 || cardData.cardNumber.indexOf('_') !== -1){
             setValidations({...validations, ...validations.cardNumber = true});
@@ -267,9 +267,33 @@ const Checkout = () =>{
         }
     }
 
+    useEffect(() => {
+        fetch('/clip')
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+      }, [])
+
     /**** Envía el formulario al Backend ****/
     const sendData = () => {
-        
+        let card = {
+            cardNumber: cardData.cardNumber,
+            cardName: cardData.cardHolder,
+            ccv: cardData.cardCCV,
+            expiration: cardData.cardMonth + '-' + cardData.cardYear
+        }
+
+        fetch('/clip', {
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            method: "POST",
+            body: JSON.stringify(card)
+        })
+        .then(res => res.json())
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
     }
 
     /**** Render ****/
@@ -340,6 +364,9 @@ const Checkout = () =>{
                     </ColOneThird>
                 </Row>
                 <Button onClick={(e) => submit(e)}>Submit</Button>
+                <Row>
+                    {responsePost}
+                </Row>
             </form>
         </Container>
         
